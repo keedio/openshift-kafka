@@ -39,16 +39,11 @@ RUN \
   tar xvzf /tmp/zookeeper-${ZOOK_VERSION}.tar.gz  -C /opt && \
   rm -f /tmp/zookeper-*    
 
-VOLUME ["/kafka"]
+# Create zookeeper config 
+RUN \
+  cp /opt/zookeeper-3.4.6/conf/zoo_sample.cfg /opt/zookeeper-3.4.6/conf/zoo.cfg
 
-# Add some script
-ADD scripts/start-zookeeper.sh /usr/bin/start-zookeeper.sh
-ADD scripts/start-kafka.sh /usr/bin/start-kafka.sh
-
-
-RUN chmod a+x /usr/bin/start-kafka.sh  && chmod a+x /usr/bin/start-zookeeper.sh 
+VOLUME ["/kafka/logs /zookeper/logs"]
 
 # Zookeper/Kafka
 EXPOSE 2181 9092
-
-CMD ["start-kafka.sh"]

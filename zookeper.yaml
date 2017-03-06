@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: openstack-poc-zookeeper
+  annotations:
+    description: Zookeeper pod
+    tags: logs,poc,openstack,zookeeper
+
+parameters:
+- name: VOLUME_CAPACITY
+  description: Persistent volume capacity per pod
+  required: true
+  value:  2Gi
+- name: OBJECT_NAME_PREFIX
+  description: Name prefix for each object created
+  required: true
+  value: openstack-poc-zookp
+- name: IMAGESTREAM
+  description: Imagestream name
+  required: true
+  value: kafka-openstack-poc
+
+objects:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: ${OBJECT_NAME_PREFIX}
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${VOLUME_CAPACITY}
+
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: ${OBJECT_NAME_PREFIX}
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: ${OBJECT_NAME_PREFIX}
+    template:
+      metadata:
+        labels:
+          deploymentconfig: ${OBJECT_NAME_PREFIX}
+      spec:
+        containers:
+        - name: kafka-openstack-poc
+          image: ${IMAGESTREAM}
+          command:
+          - /opt/zookeeper-3.4.6/bin/zkServer.sh 
+          args:
+          - start
+          volumeMounts:
+          - mountPath: /tmp/zookeeper
+            name: zookeeper
+          ports:
+          - containerPort: 2181
+        volumes:
+        - name: zookeeper
+          persistentVolumeClaim:
+            claimName: ${OBJECT_NAME_PREFIX}
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: false
+        containerNames:
+        - kafka-openstack-poc
+        from:
+          kind: ImageStream
+          name: ${IMAGESTREAM}
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ${OBJECT_NAME_PREFIX}
+  spec:
+    ports:
+    - port: 2181
+    selector:
+      deploymentconfig: ${OBJECT_NAME_PREFIX}
