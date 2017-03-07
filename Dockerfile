@@ -2,7 +2,7 @@
 
 # Pull base image
 FROM centos:7
-ADD scripts/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
+
 
 # Build-time vars
 ARG KAFKA_VERSION=0.8.2.0
@@ -27,17 +27,17 @@ RUN \
   
   
 
-# Kafka download
-RUN \
-  curl -L ${KAFKA_MIRROR}/kafka_2.10-${KAFKA_VERSION}.tgz -o /tmp/kafka_2.10-${KAFKA_VERSION}.tgz && \
-  curl -L http://apache.rediris.es/zookeeper/zookeeper-${ZOOK_VERSION}/zookeeper-${ZOOK_VERSION}.tar.gz -o /tmp/zookeeper-${ZOOK_VERSION}.tar.gz
+# ADD repos files
+  ADD repos/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
+  ADD repos/kafka_2.10-${KAFKA_VERSION}.tgz /tmp/kafka_2.10-${KAFKA_VERSION}.tgz 
+  ADD repos/zookeeper-${ZOOK_VERSION}.tgz /tmp/zookeeper-${ZOOK_VERSION}.tgz
 
 # Install 
 RUN \
   tar xvzf /tmp/kafka_2.10-${KAFKA_VERSION}.tgz  -C /opt && \
   mv /opt/kafka_2.10-${KAFKA_VERSION} /opt/kafka-${KAFKA_VERSION} && \
   rm -f /tmp/kafka-* && \
-  tar xvzf /tmp/zookeeper-${ZOOK_VERSION}.tar.gz  -C /opt && \
+  tar xvzf /tmp/zookeeper-${ZOOK_VERSION}.tgz  -C /opt && \
   rm -f /tmp/zookeper-*    
 
 # Create zookeeper config 
