@@ -1,7 +1,7 @@
 # Apache Kafka + Apache Zookeper Dockerfile
 
 # Pull base image
-FROM centos:7
+FROM rhel
 
 # Build-time vars
 ARG KAFKA_VERSION=0.8.2.0
