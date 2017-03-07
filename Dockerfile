@@ -2,7 +2,7 @@
 
 # Pull base image
 FROM centos:7
-ADD repos/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
+
 
 # Build-time vars
 ARG KAFKA_VERSION=0.8.2.0
@@ -29,15 +29,15 @@ RUN \
 
 # ADD repos files
   
-  ADD repos/kafka_2.10-${KAFKA_VERSION}.tgz /tmp/kafka_2.10-${KAFKA_VERSION}.tgz 
-  ADD repos/zookeeper-${ZOOK_VERSION}.tgz /tmp/zookeeper-${ZOOK_VERSION}.tgz
+  COPY repos/kafka_2.10-${KAFKA_VERSION}.tar.gz /tmp/kafka_2.10-${KAFKA_VERSION}.tar.gz 
+  COPY repos/zookeeper-${ZOOK_VERSION}.tar.gz /tmp/zookeeper-${ZOOK_VERSION}.tar.gz
 
 # Install 
 RUN \
-  tar xvzf /tmp/kafka_2.10-${KAFKA_VERSION}.tgz  -C /opt && \
+  tar xvzf /tmp/kafka_2.10-${KAFKA_VERSION}.tar.gz  -C /opt && \
   mv /opt/kafka_2.10-${KAFKA_VERSION} /opt/kafka-${KAFKA_VERSION} && \
   rm -f /tmp/kafka-* && \
-  tar xvzf /tmp/zookeeper-${ZOOK_VERSION}.tgz  -C /opt && \
+  tar xvzf /tmp/zookeeper-${ZOOK_VERSION}.tar.gz  -C /opt && \
   rm -f /tmp/zookeper-*    
 
 # Create zookeeper config 
