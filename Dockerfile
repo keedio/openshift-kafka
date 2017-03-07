@@ -1,7 +1,8 @@
 # Apache Kafka + Apache Zookeper Dockerfile
 
 # Pull base image
-FROM rhel
+FROM centos:7
+ADD scripts/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
 
 # Build-time vars
 ARG KAFKA_VERSION=0.8.2.0
