@@ -22,9 +22,9 @@ ENV JAVA_HOME /usr/lib/jvm/jre
 
 # Java & supervisor installation
 RUN \
- 
+  yum clean all && \
   yum install -y java-${JAVA_VERSION}-openjdk && \
-  yum clean all
+  
   
 
 # Kafka download
