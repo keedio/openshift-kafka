@@ -41,11 +41,7 @@ RUN \
   rm -f /tmp/zookeper-*    
 
 # Create zookeeper config 
-RUN \
-  cp /opt/zookeeper-3.4.6/conf/zoo_sample.cfg /opt/zookeeper-3.4.6/bin/zoo.cfg
-
-# Set config to point the log files
-ADD scripts/zkEnv.sh /opt/zookeeper-${ZOOK_VERSION}/bin/zkEnv.sh
+ADD scripts/zoo.cfg /opt/zookeeper-${ZOOK_VERSION}/bin/zoo.cfg
 
 VOLUME ["/kafka/logs /zookeper/logs"]
 
