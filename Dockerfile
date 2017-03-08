@@ -42,7 +42,7 @@ RUN \
   mkdir kafka_data && chown root: /kafka_data && \
   chmod g+w /kafka_data && \ 
   mkdir zookeeper_data && chown root: /zookeeper_data && \
-  chmod g+w /zookeeper_data 
+  chmod 777 /zookeeper_data 
   
 
 # Create zookeeper config 
