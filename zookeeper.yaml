@@ -26,17 +26,6 @@ parameters:
 
 objects:
 - apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    name: ${OBJECT_NAME_PREFIX}
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: ${VOLUME_CAPACITY}
-
-- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     name: ${OBJECT_NAME_PREFIX}
