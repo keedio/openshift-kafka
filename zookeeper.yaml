@@ -19,6 +19,10 @@ parameters:
   description: Imagestream name
   required: true
   value: kafka-openstack-poc
+- description: Name of the ImageStreamTag to be used for image.
+  displayName: ImageStreamTag
+  name: IMAGE_STREAM_TAG
+  value: "kafka-openstack-poc:latest"    
 
 objects:
 - apiVersion: v1
@@ -46,8 +50,8 @@ objects:
           deploymentconfig: ${OBJECT_NAME_PREFIX}
       spec:
         containers:
-        - name: kafka-openstack-poc
-          image: ${IMAGESTREAM}
+        - name: "zook-service-1"
+         image: ${IMAGE_STREAM_TAG}
           command:
           - /opt/zookeeper-3.4.6/bin/zkServer.sh 
           args:
@@ -65,12 +69,12 @@ objects:
     - type: ConfigChange
     - type: ImageChange
       imageChangeParams:
-        automatic: false
+        automatic: true
         containerNames:
-        - kafka-openstack-poc
+        - "zook-service-1"
         from:
-          kind: ImageStream
-          name: ${IMAGESTREAM}
+          kkind: ImageStreamTag
+          name: ${ZK_IMAGE_STREAM_TAG}
 
 - apiVersion: v1
   kind: Service

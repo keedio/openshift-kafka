@@ -15,6 +15,10 @@ parameters:
   description: Name prefix for each object created
   required: true
   value: kafka-openstack-poc
+- description: Name of the ImageStreamTag to be used for image.
+  displayName: ImageStreamTag
+  name: IMAGE_STREAM_TAG
+  value: "kafka-openstack-poc:latest"  
 
 objects:
 - apiVersion: v1
@@ -35,7 +39,7 @@ objects:
         uri: ${SOURCE_REPOSITORY_URL}
     output:
       to:
-        kind: ImageStream
-        name: ${OBJECT_NAME_PREFIX}
+        kind: "ImageStreamTag" 
+        name: ${IMAGE_STREAM_TAG}
     triggers:
     - type: ConfigChange
