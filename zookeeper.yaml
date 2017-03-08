@@ -54,7 +54,7 @@ objects:
         from:
           kkind: ImageStreamTag
           name: ${IMAGE_STREAM_TAG}
-         strategy:
+    strategy:
       type: Recreate
     paused: false
     revisionHistoryLimit: 2     
