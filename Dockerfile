@@ -50,8 +50,8 @@ VOLUME ["zookeeper_data"]
 # Zookeper/Kafka
 EXPOSE 2181 9092
 
-COPY scripts/entry.sh /opt/zookeeper/
+COPY scripts/entry.sh /opt/zookeeper-3.4.6/
 
 COPY scripts/zoo.cfg /opt/zookeeper-3.4.6/conf/    
 
-ENTRYPOINT ["/opt/zookeeper/entry.sh"]
+ENTRYPOINT ["/opt/zookeeper-3.4.6/entry.sh"]
