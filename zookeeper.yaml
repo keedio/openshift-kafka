@@ -57,7 +57,7 @@ objects:
             value: '/opt/zookeeper-3.4.6/conf'
           command: ["/opt/zookeeper-3.4.6/bin/zkServer.sh", "start"]
           volumeMounts:
-          - mountPath: /zookeeper/logs
+          - mountPath: /zookeeper_data
             name: zookeeper
           ports:
           - containerPort: 2181

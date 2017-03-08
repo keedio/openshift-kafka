@@ -2,7 +2,7 @@
 
 # Pull base image
 FROM centos:7
-ADD repos/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
+
 
 # Build-time vars
 ARG KAFKA_VERSION=0.8.2.0
@@ -38,15 +38,16 @@ RUN \
   mv /opt/kafka_2.10-${KAFKA_VERSION} /opt/kafka-${KAFKA_VERSION} && \
   rm -f /tmp/kafka-* && \
   tar xvzf /tmp/zookeeper-${ZOOK_VERSION}.tar.gz  -C /opt && \
-  rm -f /tmp/zookeper-*    
+  rm -f /tmp/zookeper-*  && \
+  mkdir kafka_data && chown root: /kafka_data && \
+  chmod g+w /kafka_data && \ 
+  mkdir zookeeper_data && chown root: /zookeeper_data && \
+  chmod g+w /zookeeper_data 
+  
 
 # Create zookeeper config 
 COPY scripts/zoo.cfg /opt/zookeeper-${ZOOK_VERSION}/conf/zoo.cfg
 
-VOLUME ["/kafka/logs"]
-VOLUME ["/zookeeper/logs"]
-
-RUN chmod -R a=u /kafka/logs &&  chmod -R a=u /zookeper/logs
 
 # Zookeper/Kafka
 EXPOSE 2181 9092
