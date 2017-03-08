@@ -51,7 +51,7 @@ objects:
       spec:
         containers:
         - name: "zook-service-1"
-         image: ${IMAGE_STREAM_TAG}
+          image: ${IMAGE_STREAM_TAG}
           command:
           - /opt/zookeeper-3.4.6/bin/zkServer.sh 
           args:
@@ -74,7 +74,7 @@ objects:
         - "zook-service-1"
         from:
           kkind: ImageStreamTag
-          name: ${ZK_IMAGE_STREAM_TAG}
+          name: ${IMAGE_STREAM_TAG}
 
 - apiVersion: v1
   kind: Service
