@@ -54,15 +54,25 @@ objects:
           image: ${IMAGE_STREAM_TAG}
           env:
           - name: ZOOCFGDIR
-            value: '/opt/zookeeper-3.4.6/conf'
-          command: ["/opt/zookeeper-3.4.6/bin/zkServer.sh", "start"]
+            value: '/opt/conf'
+          command: ["/opt/zookeeper/entry.sh"]
           volumeMounts:
           - mountPath: /zookeeper_data
-            name: zookeeper
+            name: persistent-vol
+          - name: data-volume
+            mountPath: /opt/zookeeper-data
+          - name: config-volume
+            mountPath: /opt/conf/
           ports:
           - containerPort: 2181
         volumes:
-        - name: zookeeper
+        - name: data-volume
+          configMap:
+            name: zk-1-config
+        - name: config-volume
+          configMap:
+            name: zk-1-config  
+        - name: persistent-vol
           persistentVolumeClaim:
             claimName: ${OBJECT_NAME_PREFIX}
     triggers:
