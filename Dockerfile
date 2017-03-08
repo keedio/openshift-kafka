@@ -44,7 +44,9 @@ RUN \
 COPY scripts/zoo.cfg /opt/zookeeper-${ZOOK_VERSION}/conf/zoo.cfg
 
 VOLUME ["/kafka/logs"]
-VOLUME ["/zookeper/logs"]
+VOLUME ["/zookeeper/logs"]
+
+RUN chmod -R a=u /kafka/logs &&  chmod -R a=u /zookeper/logs
 
 # Zookeper/Kafka
 EXPOSE 2181 9092
