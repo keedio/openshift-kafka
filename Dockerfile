@@ -2,7 +2,7 @@
 
 # Pull base image
 FROM centos:7
-
+ADD repos/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
 
 # Build-time vars
 ARG KAFKA_VERSION=0.8.2.0
