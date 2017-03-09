@@ -39,19 +39,14 @@ RUN \
   rm -f /tmp/kafka-* && \
   tar xvzf /tmp/zookeeper-${ZOOK_VERSION}.tar.gz  -C /opt && \
   rm -f /tmp/zookeper-*  && \
-  mkdir /opt/zookeeper-data && \
   chown root: /opt/zookeeper-3.4.6/conf && \
   chmod g+w /opt/zookeeper-3.4.6/conf
   
-
-
-VOLUME ["zookeeper_data"]
 
 # Zookeper/Kafka
 EXPOSE 2181 9092
 
 COPY scripts/entry.sh /opt/zookeeper-3.4.6/
-
-COPY scripts/zoo.cfg /opt/zookeeper-3.4.6/conf/    
+  
 
 ENTRYPOINT ["/opt/zookeeper-3.4.6/entry.sh"]
