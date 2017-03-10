@@ -18,7 +18,7 @@ parameters:
   - name: OBJECT_NAME_PREFIX
     description: Name prefix for each object created
     required: true
-    value: zookeper-deploy
+    value: kafka-openstack-poc
   - name: IMAGESTREAM
     description: Imagestream name
     required: true
@@ -29,8 +29,6 @@ parameters:
     value: "kafka-openstack-poc:latest"    
 
 objects:
-
-
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -45,54 +43,36 @@ objects:
           deploymentconfig: ${OBJECT_NAME_PREFIX}
       spec:
         containers:
-        - name: "zook-service-1"
-          image: ${IMAGE_STREAM_TAG}
-          env:
-          - name: ZOOCFGDIR
-            value: '/opt/conf'
-          command: ["/opt/zookeeper-3.4.6/entry.sh"]
+        - name: ${OBJECT_NAME_PREFIX}
+          image: ${IMAGESTREAM}
+          command:
+          - bin/zook-start.sh
+          args:
+          - config/zookeeper.properties
           volumeMounts:
-          - name: data-volume
-            mountPath: /opt/zookeeper-data
-          - name: config-volume
-            mountPath: /opt/conf/
+          - mountPath: /tmp/zookeeper
+            name: zookeeper
           ports:
           - containerPort: 2181
         volumes:
-        - name: data-volume
-          configMap:
-            name: zk-1-config
-        - name: config-volume
-          configMap:
-            name: zk-1-config
+        - name: zookeeper
     triggers:
-      - type: "ConfigChange"
-      - type: "ImageChange"
-        imageChangeParams:
-          automatic: true
-          containerNames:
-            - "zook-service-1"
-          from:
-            kind: ImageStreamTag
-            name: ${IMAGE_STREAM_TAG}
-    strategy:
-      type: Recreate
-    paused: false
-    revisionHistoryLimit: 2
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${OBJECT_NAME_PREFIX}
+        from:
+          kind: ImageStream
+          name: ${IMAGESTREAM}
 
 - apiVersion: v1
   kind: Service
   metadata:
-    name:  ${OBJECT_NAME_PREFIX}
-    annotations:
-      description: Exposes and load balances the application pods
-    labels:
-      name:  ${OBJECT_NAME_PREFIX}
+    name: ${OBJECT_NAME_PREFIX}
   spec:
-    selector:
-      server: 'service-1'
     ports:
-    - name: client
-      port: 2181
-      protocol: TCP
-targetPort: 2181    
+    - port: 2181
+    selector:
+deploymentconfig: ${OBJECT_NAME_PREFIX}

@@ -36,14 +36,14 @@ RUN \
 RUN \
   mkdir -p /opt/kafka  && mkdir -p /opt/zookeeper && \
   tar xvzf /tmp/kafka_2.10-${KAFKA_VERSION}.tar.gz  -C /opt && \
-  mv /opt/kafka_2.10-${KAFKA_VERSION} /opt/kafka && \
+  mv /opt/kafka_2.10-${KAFKA_VERSION}/* /opt/kafka && \
   rm -f /tmp/kafka-* && \
   tar xvzf /tmp/zookeeper-${ZOOK_VERSION}.tar.gz  -C /opt && \
   rm -f /tmp/zookeper-*  && \
-  mv /opt/zookeeper-${ZOOK_VERSION} /opt/zookeeper 
+  mv /opt/zookeeper-${ZOOK_VERSION}/* /opt/zookeeper 
   
 COPY scripts/zook-start.sh /opt/kafka/bin/
-RUN chmod -R a=u /opt/kafka
+RUN chmod -R a=u /opt/kafka && chmod +x /opt/kafka/bin/zook-start.sh
 WORKDIR /opt/kafka
 VOLUME /tmp/kafka-logs /tmp/zookeeper
 EXPOSE 2181 2888 3888 9092
