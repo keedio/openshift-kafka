@@ -9,7 +9,7 @@ BROKER=$4
 cat >>$PROPERTIES <<EOF
 broker.id=$BROKER
 zookeeper.connect=$ZOOKEEPER
-host.name=$HOST_NAME
+advertised.host.name=$HOST_NAME
 
 EOF
 

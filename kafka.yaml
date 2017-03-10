@@ -47,7 +47,7 @@ objects:
           - config/server.properties
           - ${ZOOKEEPER_SERVICE}
           - ${OBJECT_NAME_PREFIX}
-          - 0
+          - "0"
           volumeMounts:
           - mountPath: /tmp/kafka-logs
             name: kafka-logs

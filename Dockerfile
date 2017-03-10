@@ -3,7 +3,6 @@
 # Pull base image
 FROM centos:7
 
-
 # Build-time vars
 ARG KAFKA_VERSION=0.8.2.0
 ARG KAFKA_MIRROR=http://apache.rediris.es/kafka/${KAFKA_VERSION}
