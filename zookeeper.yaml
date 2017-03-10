@@ -1,94 +1,98 @@
 apiVersion: v1
 kind: Template
 metadata:
-name: openstack-poc-zookeeper
-annotations:
-  description: Zookeeper pod
-  tags: logs,poc,openstack,zookeeper
+  name: openstack-poc-zookeeper
+  annotations:
+    description: Zookeeper pod
+    tags: logs,poc,openstack,zookeeper
 
 parameters:
-- name: VOLUME_CAPACITY
-description: Persistent volume capacity per pod
-required: true
-value:  512Mi
-- name: VOLUME_CLAIM_NAME
-description: Persistent volume capacity per pod
-required: true
-value:  app1-pvc
-- name: OBJECT_NAME_PREFIX
-description: Name prefix for each object created
-required: true
-value: zookeper-deploy
-- name: IMAGESTREAM
-description: Imagestream name
-required: true
-value: kafka-openstack-poc
-- description: Name of the ImageStreamTag to be used for image.
-displayName: ImageStreamTag
-name: IMAGE_STREAM_TAG
-value: "kafka-openstack-poc:latest"    
+  - name: VOLUME_CAPACITY
+    description: Persistent volume capacity per pod
+    required: true
+    value:  512Mi
+  - name: VOLUME_CLAIM_NAME
+    description: Persistent claim name
+    required: true
+    value: app1-pvc
+  - name: OBJECT_NAME_PREFIX
+    description: Name prefix for each object created
+    required: true
+    value: zookeper-deploy
+  - name: IMAGESTREAM
+    description: Imagestream name
+    required: true
+    value: kafka-openstack-poc
+  - description: Name of the ImageStreamTag to be used for image.
+    displayName: ImageStreamTag
+    name: IMAGE_STREAM_TAG
+    value: "kafka-openstack-poc:latest"    
 
 objects:
-- apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: ${OBJECT_NAME_PREFIX}
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: ${VOLUME_CAPACITY}
+
 
 - apiVersion: v1
-kind: DeploymentConfig
-metadata:
-  name: ${VOLUME_CLAIM_NAME}
-spec:
-  replicas: 1
-  selector:
-    deploymentconfig: ${OBJECT_NAME_PREFIX}
-  template:
-    metadata:
-      labels:
-        deploymentconfig: ${OBJECT_NAME_PREFIX}
-    spec:
-      containers:
-      - name: "zook-service-1"
-        image: ${IMAGE_STREAM_TAG}
-        env:
-        - name: ZOOCFGDIR
-          value: '/opt/conf'
-        command: ["/opt/zookeeper-3.4.6/entry.sh"]
-        volumeMounts:
+  kind: DeploymentConfig
+  metadata:
+    name: ${OBJECT_NAME_PREFIX}
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: ${OBJECT_NAME_PREFIX}
+    template:
+      metadata:
+        labels:
+          deploymentconfig: ${OBJECT_NAME_PREFIX}
+      spec:
+        containers:
+        - name: "zook-service-1"
+          image: ${IMAGE_STREAM_TAG}
+          env:
+          - name: ZOOCFGDIR
+            value: '/opt/conf'
+          command: ["/opt/zookeeper-3.4.6/entry.sh"]
+          volumeMounts:
+          - name: data-volume
+            mountPath: /opt/zookeeper-data
+          - name: config-volume
+            mountPath: /opt/conf/
+          ports:
+          - containerPort: 2181
+        volumes:
         - name: data-volume
-          mountPath: /opt/zookeeper-data
+          configMap:
+            name: zk-1-config
         - name: config-volume
-          mountPath: /opt/conf/
-        ports:
-        - containerPort: 2181
-      volumes:
-      - name: data-volume
-        configMap:
-          name: zk-1-config
-        persistentVolumeClaim:
-          claimName: ${VOLUME_CLAIM_NAME}  
-      - name: config-volume
-        configMap:
-          name: zk-1-config
-        persistentVolumeClaim:
-          claimName: ${VOLUME_CLAIM_NAME}
-   triggers:
-   - type: ConfigChange
-   - type: ImageChange
-     imageChangeParams:
-       automatic: true
-       containerNames:
-       - "zook-service-1"
-       from:
-         kkind: ImageStreamTag
-         name: ${IMAGE_STREAM_TAG}
-       strategy:
-    type: Recreate
-  paused: false
-  revisionHistoryLimit: 2     
+          configMap:
+            name: zk-1-config
+    triggers:
+      - type: "ConfigChange"
+      - type: "ImageChange"
+        imageChangeParams:
+          automatic: true
+          containerNames:
+            - "zook-service-1"
+          from:
+            kind: ImageStreamTag
+            name: ${IMAGE_STREAM_TAG}
+    strategy:
+      type: Recreate
+    paused: false
+    revisionHistoryLimit: 2
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name:  ${OBJECT_NAME_PREFIX}
+    annotations:
+      description: Exposes and load balances the application pods
+    labels:
+      name:  ${OBJECT_NAME_PREFIX}
+  spec:
+    selector:
+      server: 'service-1'
+    ports:
+    - name: client
+      port: 2181
+      protocol: TCP
+targetPort: 2181    

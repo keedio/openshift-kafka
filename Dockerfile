@@ -34,21 +34,16 @@ RUN \
 
 # Install 
 RUN \
+  mkdir -p /opt/kafka  && mkdir -p /opt/zookeeper && \
   tar xvzf /tmp/kafka_2.10-${KAFKA_VERSION}.tar.gz  -C /opt && \
-  mv /opt/kafka_2.10-${KAFKA_VERSION} /opt/kafka-${KAFKA_VERSION} && \
+  mv /opt/kafka_2.10-${KAFKA_VERSION} /opt/kafka && \
   rm -f /tmp/kafka-* && \
   tar xvzf /tmp/zookeeper-${ZOOK_VERSION}.tar.gz  -C /opt && \
   rm -f /tmp/zookeper-*  && \
-  chown root: /opt/zookeeper-3.4.6/conf && \
-  chmod g+w /opt/zookeeper-3.4.6/conf
+  mv /opt/zookeeper-${ZOOK_VERSION} /opt/zookeeper 
   
-
-# Zookeper/Kafka
-EXPOSE 2181 9092
-
-COPY scripts/entry.sh /opt/zookeeper-3.4.6/
-
-ENTRYPOINT ["/opt/zookeeper-3.4.6/entry.sh"]
-  
-
-ENTRYPOINT ["/opt/zookeeper-3.4.6/entry.sh"]
+COPY scripts/zook-start.sh /opt/kafka/bin/
+RUN chmod -R a=u /opt/kafka
+WORKDIR /opt/kafka
+VOLUME /tmp/kafka-logs /tmp/zookeeper
+EXPOSE 2181 2888 3888 9092
