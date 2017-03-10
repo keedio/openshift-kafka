@@ -11,10 +11,14 @@ parameters:
 description: Persistent volume capacity per pod
 required: true
 value:  512Mi
+- name: VOLUME_CLAIM_NAME
+description: Persistent volume capacity per pod
+required: true
+value:  app1-pvc
 - name: OBJECT_NAME_PREFIX
 description: Name prefix for each object created
 required: true
-value: openstack-poc-zookp
+value: zookeper-deploy
 - name: IMAGESTREAM
 description: Imagestream name
 required: true
@@ -39,7 +43,7 @@ spec:
 - apiVersion: v1
 kind: DeploymentConfig
 metadata:
-  name: ${OBJECT_NAME_PREFIX}
+  name: ${VOLUME_CLAIM_NAME}
 spec:
   replicas: 1
   selector:
@@ -68,12 +72,12 @@ spec:
         configMap:
           name: zk-1-config
         persistentVolumeClaim:
-          claimName: ${OBJECT_NAME_PREFIX}  
+          claimName: ${VOLUME_CLAIM_NAME}  
       - name: config-volume
         configMap:
           name: zk-1-config
         persistentVolumeClaim:
-          claimName: ${OBJECT_NAME_PREFIX}
+          claimName: ${VOLUME_CLAIM_NAME}
    triggers:
    - type: ConfigChange
    - type: ImageChange

@@ -48,7 +48,7 @@ EXPOSE 2181 9092
 
 COPY scripts/entry.sh /opt/zookeeper-3.4.6/
 
-ENTRYPOINT ["/opt/zookeeper-3.4.6/docker-entrypoint.sh"]
+ENTRYPOINT ["/opt/zookeeper-3.4.6/entry.sh"]
   
 
 ENTRYPOINT ["/opt/zookeeper-3.4.6/entry.sh"]
