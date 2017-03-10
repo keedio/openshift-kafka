@@ -1,4 +1,4 @@
-
+#!/bin/bash
 PROPERTIES=$1
 PREFIX=$2
 MYID=$3

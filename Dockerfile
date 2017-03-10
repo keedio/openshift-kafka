@@ -2,7 +2,7 @@
 
 # Pull base image
 FROM centos:7
-ADD repos/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
+
 
 # Build-time vars
 ARG KAFKA_VERSION=0.8.2.0
@@ -43,7 +43,8 @@ RUN \
   mv /opt/zookeeper-${ZOOK_VERSION}/* /opt/zookeeper 
   
 COPY scripts/zook-start.sh /opt/kafka/bin/
-RUN chmod -R a=u /opt/kafka && chmod +x /opt/kafka/bin/zook-start.sh
+COPY scripts/start-kafka.sh /opt/kafka/bin/
+RUN chmod -R a=u /opt/kafka && chmod +x /opt/kafka/bin/zook-start.sh && chmod +x /opt/kafka/bin/start-kafka.sh
 WORKDIR /opt/kafka
 VOLUME /tmp/kafka-logs /tmp/zookeeper
 EXPOSE 2181 2888 3888 9092

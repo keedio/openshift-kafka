@@ -18,7 +18,7 @@ parameters:
   - name: OBJECT_NAME_PREFIX
     description: Name prefix for each object created
     required: true
-    value: kafka-openstack-poc
+    value: zookeeper
   - name: IMAGESTREAM
     description: Imagestream name
     required: true
@@ -46,7 +46,7 @@ objects:
         - name: ${OBJECT_NAME_PREFIX}
           image: ${IMAGESTREAM}
           command:
-          - bin/zook-start.sh
+          - bin/zookeeper-server-start.sh
           args:
           - config/zookeeper.properties
           volumeMounts:
@@ -75,4 +75,4 @@ objects:
     ports:
     - port: 2181
     selector:
-deploymentconfig: ${OBJECT_NAME_PREFIX}
+      deploymentconfig: ${OBJECT_NAME_PREFIX}
