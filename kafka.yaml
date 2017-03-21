@@ -48,6 +48,7 @@ objects:
           - ${ZOOKEEPER_SERVICE}
           - ${OBJECT_NAME_PREFIX}
           - "0"
+          - "2341"
           volumeMounts:
           - mountPath: /tmp/kafka-logs
             name: kafka-logs
