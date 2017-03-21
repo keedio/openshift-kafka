@@ -43,6 +43,7 @@ RUN \
   
 COPY scripts/zook-start.sh /opt/kafka/bin/
 COPY scripts/start-kafka.sh /opt/kafka/bin/
+COPY server.properties.template /config/server.properties
 RUN chmod -R a=u /opt/kafka && chmod +x /opt/kafka/bin/zook-start.sh && chmod +x /opt/kafka/bin/start-kafka.sh
 WORKDIR /opt/kafka
 VOLUME /tmp/kafka-logs /tmp/zookeeper
