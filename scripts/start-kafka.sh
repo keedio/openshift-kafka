@@ -3,30 +3,17 @@ PROPERTIES=$1
 ZOOKEEPER=$2
 HOST_NAME=$3
 BROKER=$4
+PORT=$5
 
-
-
-cat >>$PROPERTIES <<EOF
-broker.id=$BROKER
-zookeeper.connect=$ZOOKEEPER
-advertised.host.name=$HOST_NAME
-
-EOF
-ZOOKEEPER
-BROKER_ID
-HOST_NAME
 
 sed -i 's/${BROKER_ID}/'$BROKER'/g' $PROPERTIES 
+sed -i 's/${ZOOKEEPER}/'$ZOOKEEPER'/g' $PROPERTIES 
+sed -i 's/${HOST_NAME}/'$HOST_NAME'/g' $PROPERTIES 
+sed -i 's/${PORT}/'$PORT'/g' $PROPERTIES 
 
 cat $PROPERTIES
 
 exec bin/kafka-server-start.sh $PROPERTIES
-
-#!/bin/bash
-
-
-
-sed -i 's/${SEEDS}/'${Array[0]}'/g' $PROPERTIES 
 
 
 
