@@ -6,7 +6,7 @@ sed -i 's/${PORT}/'$PORT'/g' /opt/kafka/config/server.properties
 
 cat /opt/kafka/config/server.properties
 
-exec bin/kafka-server-start.sh $PROPERTIES
+exec bin/kafka-server-start.sh /opt/kafka/config/server.properties
 
 
 
