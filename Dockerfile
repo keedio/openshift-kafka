@@ -41,7 +41,8 @@ RUN \
   rm -f /tmp/zookeper-*  && \
   mv /opt/zookeeper-${ZOOK_VERSION}/* /opt/zookeeper 
 
-RUN echo "root:Docker!" | chpasswd  
+RUN echo "192.168.1.241 kafka-shuriken.apps.keedio.lab" >> /etc/hosts  && curl http://kafka-shuriken.apps.keedio.lab
+
   
 COPY scripts/zook-start.sh /opt/kafka/bin/
 COPY scripts/start-kafka.sh /opt/kafka/bin/
