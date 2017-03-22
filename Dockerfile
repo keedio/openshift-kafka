@@ -40,6 +40,8 @@ RUN \
   tar xvzf /tmp/zookeeper-${ZOOK_VERSION}.tar.gz  -C /opt && \
   rm -f /tmp/zookeper-*  && \
   mv /opt/zookeeper-${ZOOK_VERSION}/* /opt/zookeeper 
+
+RUN echo "root:Docker!" | chpasswd  
   
 COPY scripts/zook-start.sh /opt/kafka/bin/
 COPY scripts/start-kafka.sh /opt/kafka/bin/
