@@ -42,13 +42,21 @@ objects:
         - name: kafka
           image: ${IMAGESTREAM}
           command:
-          - bin/start-kafka.sh
+            - bin/start-kafka.sh
           args:
-          - config/server.properties
-          - ${ZOOKEEPER_SERVICE}
-          - ${OBJECT_NAME_PREFIX}
-          - "0"
-          - "2341"
+            - config/server.properties
+          ports:
+            - containerPort: 9092
+              protocol: TCP
+          env:
+            - name: ZOOKEEPER
+              value: zookeeper
+            - name: HOST_NAME
+              value: kafka-shuriken.apps.keedio.lab
+            - name: BROKER
+              value: '0'
+            - name: PORT
+              value: '32464'
           volumeMounts:
           - mountPath: /tmp/kafka-logs
             name: kafka-logs

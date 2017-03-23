@@ -119,3 +119,5 @@ zookeeper.connect=${ZOOKEEPER}
 
 # Timeout in ms for connecting to zookeeper
 zookeeper.connection.timeout.ms=6000
+
+listeners=PLAINTEXT://0.0.0.0:9092
