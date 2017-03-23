@@ -4,8 +4,8 @@
 FROM centos:7
 
 # Build-time vars
-ARG KAFKA_VERSION=0.8.2.0
-ARG KAFKA_MIRROR=http://apache.rediris.es/kafka/${KAFKA_VERSION}
+ARG KAFKA_VERSION=0.10.2.0
+ARG KAFKA_MIRROR=http://apache.rediris.es/kafka/${KAFKA_VERSION}/kafka_2.11-${KAFKA_VERSION}.tgz  
 ARG ZOOK_VERSION=3.4.6
 
 # Enviroment vars
@@ -25,23 +25,16 @@ RUN \
   yum install -y java-${JAVA_VERSION}-openjdk 
   
   
-
-# ADD repos files
-  
-  COPY repos/kafka_2.10-${KAFKA_VERSION}.tar.gz /tmp/kafka_2.10-${KAFKA_VERSION}.tar.gz 
-  COPY repos/zookeeper-${ZOOK_VERSION}.tar.gz /tmp/zookeeper-${ZOOK_VERSION}.tar.gz
+RUN \
+  cd /tmp && curl -O http://apache.rediris.es/kafka/${KAFKA_VERSION}/kafka_2.11-${KAFKA_VERSION}.tgz  
 
 # Install 
 RUN \
   mkdir -p /opt/kafka  && mkdir -p /opt/zookeeper && \
-  tar xvzf /tmp/kafka_2.10-${KAFKA_VERSION}.tar.gz  -C /opt && \
-  mv /opt/kafka_2.10-${KAFKA_VERSION}/* /opt/kafka && \
-  rm -f /tmp/kafka-* && \
-  tar xvzf /tmp/zookeeper-${ZOOK_VERSION}.tar.gz  -C /opt && \
-  rm -f /tmp/zookeper-*  && \
-  mv /opt/zookeeper-${ZOOK_VERSION}/* /opt/zookeeper 
+  tar -xzf /tmp/kafka_2.11-${KAFKA_VERSION}.tgz -C /opt && \
+  mv /opt/kafka_2.11-${KAFKA_VERSION}/* /opt/kafka && \
+  rm -f /tmp/kafka-* 
 
-RUN echo "192.168.1.241 kafka-shuriken.apps.keedio.lab" >> /etc/hosts  && curl http://kafka-shuriken.apps.keedio.lab
 
   
 COPY scripts/zook-start.sh /opt/kafka/bin/
