@@ -37,8 +37,10 @@ objects:
       metadata:
         labels:
           deploymentconfig: ${OBJECT_NAME_PREFIX}
-      spec:
-        containers:
+    spec:
+      volumes:
+        - name: kafka-logs
+      containers:
         - name: kafka
           image: ${IMAGESTREAM}
           command:
@@ -46,7 +48,7 @@ objects:
           args:
             - config/server.properties
           ports:
-            - containerPort: 9092
+            - containerPort: 32464
               protocol: TCP
           env:
             - name: ZOOKEEPER
@@ -57,14 +59,10 @@ objects:
               value: '0'
             - name: PORT
               value: '32464'
+          resources: {}
           volumeMounts:
-          - mountPath: /tmp/kafka-logs
-            name: kafka-logs
-          ports:
-          - containerPort: 9092
-        volumes:
-        - name: kafka-logs
-          
+            - name: kafka-logs
+              mountPath: /tmp/kafka-logs        
     triggers:
     - type: ConfigChange
     - type: ImageChange

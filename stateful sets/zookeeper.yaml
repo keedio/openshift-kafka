@@ -1,0 +1,38 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: zookeeper
+spec:
+  serviceName: "zookeeper-intra-service"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: zookeeper
+    spec:
+      containers:
+        - name: zookeeper
+          image: 172.30.1.1:5000/kk/kafka-image:latest
+          restartPolicy: Always
+          ports:
+            - name: clientport
+              containerPort: 2181
+              protocol: TCP
+          command:
+          - bin/zookeeper-server-start.sh
+          args:
+          - config/zookeeper.properties
+          volumeMounts:
+            - name: zookeeper-storage
+              mountPath: /tmp/zookeeper               
+  volumeClaimTemplates:
+    - metadata:
+        name: zookeeper-storage
+      spec:
+        resources:
+          requests:
+            storage: 1Gi
+        accessModes:
+          - ReadWriteOnce          
+
+
